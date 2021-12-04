@@ -26,6 +26,31 @@ resource "aws_subnet" "public02" {
   }
 }
 
+resource "aws_subnet" "private01" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.32.0/20"
+  availability_zone = "us-east-1a"
+  tags = {
+    Name = "Private01"
+  }
+}
+resource "aws_subnet" "internal01" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.48.0/21"
+  availability_zone = "us-east-1a"
+  tags = {
+    Name = "Internal01"
+  }
+}
+resource "aws_subnet" "internal02" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.56.0/21"
+  availability_zone = "us-east-1b"
+  tags = {
+    Name = "Internal02"
+  }
+}
+
 resource "aws_internet_gateway" "ig1" {
   vpc_id = aws_vpc.main.id
 
@@ -45,5 +70,14 @@ resource "aws_route_table" "project1-route-table" {
 
   tags = {
     "Name" = "project1-route-table"
+  }
+}
+
+resource "aws_nat_gateway" "natg1" {
+  connectivity_type = "private"
+  subnet_id         = aws_subnet.private01.id
+
+    tags = {
+    Name = "Private NAT"
   }
 }
