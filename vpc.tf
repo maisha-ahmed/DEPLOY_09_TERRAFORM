@@ -60,7 +60,7 @@ resource "aws_internet_gateway" "ig1" {
 }
 
 # 3. Create Custom Route Table
-resource "aws_route_table" "project1-route-table" {
+resource "aws_route_table" "rt01" {
   vpc_id = aws_vpc.main.id
 
   route {
@@ -69,7 +69,15 @@ resource "aws_route_table" "project1-route-table" {
   }
 
   tags = {
-    "Name" = "project1-route-table"
+    "Name" = "rt01"
+  }
+}
+
+resource "aws_route_table" "rt02" {
+  vpc_id = aws_vpc.main.id
+  route = []
+  tags = {
+    "Name" = "rt02"
   }
 }
 
@@ -80,4 +88,20 @@ resource "aws_nat_gateway" "natg1" {
     tags = {
     Name = "Private NAT"
   }
+}
+
+resource "aws_route_table_association" "pub-rt01" {
+  subnet_id      = aws_subnet.public01.id
+  route_table_id = aws_route_table.rt01.id
+}
+
+
+resource "aws_route_table_association" "pub-rt02" {
+  subnet_id      = aws_subnet.public02.id
+  route_table_id = aws_route_table.rt01.id
+}
+
+resource "aws_route_table_association" "priv-rt01" {
+  subnet_id      = aws_subnet.private01.id
+  route_table_id = aws_route_table.rt02.id
 }

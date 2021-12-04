@@ -18,7 +18,7 @@ resource "aws_security_group" "allow_80" {
     from_port        = 80
     to_port          = 80
     protocol         = "tcp"
-    security_groups  = [aws_security_group.ALBSG.id]
+    security_groups  = [aws_security_group.alb-sg.id]
   }
 
   egress {
@@ -37,7 +37,7 @@ resource "aws_instance" "ec2" {
   ami           = "ami-083654bd07b5da81d"
   instance_type = "t2.micro"
   network_interface {
-      network_interface_id = aws_network_interface.nic1.id
+      network_interface_id = aws_network_interface.nic.id
       device_index         = 0
       }
   tags = {
